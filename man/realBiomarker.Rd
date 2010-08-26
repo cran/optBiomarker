@@ -20,6 +20,12 @@ biomarker data using \code{\link{simData}} function of the \code{\link{optBiomar
 Smith, C. L., Dickinson, P., Forster, T., Khondoker, M. R., Craigon, M., Ross, A., Storm, P., Burgess, S., Lacaze, P., Stenson, B. J.and  Ghazal, P. (2007). 
 Quantitative assessment of whole blood RNA as a potential biomarker for infectious disease.
 \emph{Analyst} \bold{132}, 1200--1209.   
+
+Khondoker, M. R., Till T. Bachmann, T. T., Mewissen, M., Dickinson, P. \emph{et al.}(2010).
+Multi-factorial analysis of class prediction error: estimating optimal number of biomarkers for various classification rules.
+\emph{Journal of Bioinformatics and Computational Biology}, \bold{8}, 945-965.
+
+
 }
 
 \keyword{datasets}

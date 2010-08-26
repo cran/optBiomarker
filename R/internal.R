@@ -382,63 +382,13 @@ panel
 yapprox<-function(y, x, xout, method="linear", n=50,
           yleft, yright, rule = 1, f = 0, ties = mean)
 {
- x <- xy.coords(x, y)
-    y <- x$y
-    x <- x$x
-    nx <- length(x)
-    method <- pmatch(method, c("linear", "constant"))
-    if (is.na(method)) 
-        stop("invalid interpolation method")
-    if (any(na <- is.na(x) | is.na(y))) {
-        ok <- !na
-        x <- x[ok]
-        y <- y[ok]
-        nx <- length(x)
-    }
-    if (!identical(ties, "ordered")) {
-        if (length(ux <- unique(x)) < nx) {
-            if (missing(ties)) 
-                warning("collapsing to unique 'x' values")
-            y <- as.vector(tapply(y, x, ties))
-            x <- sort(ux)
-            nx <- length(x)
-        }
-        else {
-            o <- order(x)
-            x <- x[o]
-            y <- y[o]
-        }
-    }
-    if (nx <= 1) {
-        if (method == 1) 
-            stop("need at least two non-NA values to interpolate")
-        if (nx == 0) 
-            stop("zero non-NA points")
-    }
-    if (missing(yleft)) 
-        yleft <- if (rule == 1) 
-            NA
-        else y[1]
-    if (missing(yright)) 
-        yright <- if (rule == 1) 
-            NA
-        else y[length(y)]
-    if (missing(xout)) {
-        if (n <= 0) 
-            stop("'approx' requires n >= 1")
-        xout <- seq.int(x[1], x[nx], length.out = n)
-    }
-    y <- .C("R_approx", as.double(x), as.double(y), as.integer(nx), 
-        xout = as.double(xout), as.integer(length(xout)), as.integer(method), 
-        as.double(yleft), as.double(yright), as.double(f), NAOK = TRUE, 
-        PACKAGE = "stats")$xout
-return(y)
+	result<-approx(x=x, y = y, xout=xout, method=method, n=n,
+          yleft=yleft, yright=yright, rule = rule, f = f, ties = ties)$y
+return(result)
 }
 
-
-
 ################################################################################
-##                            *** matapprox ***                        
+##                            *** matapprox ***
 ################################################################################
 
 ## Define matrix version of the 'approx' function
@@ -453,22 +403,20 @@ nrx<-length(rx)
 ncx<-length(cx)
 
 if (missing(rout)) {
-        if (nr<= 0) 
-            stop("'matapprox' requires nr >= 1")
+        if (nr<= 0)             stop("'matapprox' requires nr >= 1")
         rout <- seq(rx[1], rx[nrx], length.out= nr)
     }
 
 if (missing(cout)) {
-        if (nc<= 0) 
+        if (nc<= 0)
             stop("'matapprox' requires nc >= 1")
-        cout <- seq(cx[1], cx[nrx], length.out= nc)
+        cout <- seq(cx[1], cx[ncx], length.out= nc)
     }
 
 rmat<-apply(mat,2,yapprox,x=rx,xout=rout)
 crmat<-apply(rmat,1,yapprox,x=cx,xout=cout)
 return(t(crmat))
 }
-
 
 ################################################################################
 ## End of:                         internal.R

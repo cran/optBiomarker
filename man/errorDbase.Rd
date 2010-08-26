@@ -52,9 +52,17 @@ combinations of data characteristics
 
     \format{7-dimensional numeric array.}
 
+\references{
+Khondoker, M. R., Till T. Bachmann, T. T., Mewissen, M., Dickinson, P. \emph{et al.}(2010).
+Multi-factorial analysis of class prediction error: estimating optimal number of biomarkers for various classification rules.
+\emph{Journal of Bioinformatics and Computational Biology}, \bold{8}, 945-965.
+}
+
+
+
     \author{
 Mizanur Khondoker, Till Bachmann, Peter Ghazal \cr
- Maintainer: Mizanur Khondoker \email{mizanur.khondoker@googlemail.com}.}
+ Maintainer: Mizanur Khondoker \email{mizanur.khondoker@gmail.com}.}
 
    
     \seealso{
