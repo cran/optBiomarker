@@ -3,8 +3,8 @@ Type: Package
 Title: Estimation of optimal number of biomarkers for two-group
         microarray based classifications at a given error tolerance
         level for various classification rules
-Version: 1.0-20
-Date: 2009-05-09
+Version: 1.0-21
+Date: 2010-08-26
 Depends: R(>= 2.6.0), rpanel,rgl
 Imports: rgl,MASS, randomForest, e1071,ipred, msm
 Author: Mizanur Khondoker <mizanur.khondoker@googlemail.com>
@@ -12,6 +12,6 @@ Maintainer: Mizanur Khondoker <mizanur.khondoker@googlemail.com>
 Description: Estimates optimal number of biomarkers for two-group
         classification based on microarray data
 License: GPL (>= 2)
-Packaged: 2009-05-09 21:03:33 UTC; mizanur
+Packaged: 2010-08-26 20:52:41 UTC; mizanur
 Repository: CRAN
-Date/Publication: 2009-05-10 18:54:59
+Date/Publication: 2011-02-10 08:22:28

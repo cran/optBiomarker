@@ -43,7 +43,7 @@
 
 
 simData<-function(nTrain=100, nGr1=floor(nTrain/2), nBiom=50,nRep=3,
-                  sdW=1.0, sdB=1.0,rho=0,sigma=1,diffExpr=TRUE, foldMin=2,orderBiom=TRUE,baseExpr=NULL)
+                  sdW=1.0, sdB=1.0,rho=0,sigma=0.1,diffExpr=TRUE, foldMin=2,orderBiom=TRUE,baseExpr=NULL)
 {
     checkInt<-c(nTrain,nGr1,nBiom, nRep)
     if(!identical(checkInt, floor(checkInt))) stop("non-integer(s) given where argument(s) should be integer valued") 
@@ -128,13 +128,23 @@ simData<-function(nTrain=100, nGr1=floor(nTrain/2), nBiom=50,nRep=3,
     ## Generate log2(fold-change) from half normal distribution with mean=0, sd=sigma
     
     foldChange<-rtnorm(nBiom,mean=0,sd=sigma,lower=log2(foldMin))
+
+    ## Generate "noChange" for the healthy group from normal distribution with mean=0, sd=sigma
+    ## This is just to match the variability of the data in both groups
+
+    noChange<-rtnorm(nBiom,mean=0,sd=sigma,lower=-Inf)
+    
     if(orderBiom) foldChange<-sort(foldChange)
     
     ## Make the data in the diseased group (D) to be up/down regulated
     ## by the amount foldChange
       
     diffD<-matrix(foldChange*upDown, ncol=nBiom, nrow=nGr2, byrow=T)
+
+    diffH<-matrix(noChange, ncol=nBiom, nrow=nGr1, byrow=T)
+    
     avgData[(nGr1+1):nTrain,]<-avgData[(nGr1+1):nTrain,]+diffD
+    avgData[1:nGr1,]<-avgData[1:nGr1,]+diffH
       }
 
     ## Prepare data for classification

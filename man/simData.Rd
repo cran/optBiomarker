@@ -15,7 +15,7 @@ simData(nTrain=100,
         nBiom=50,nRep=3,
         sdW=1.0,
         sdB=1.0,rho=0,
-        sigma=1,diffExpr=TRUE,
+        sigma=0.1,diffExpr=TRUE,
         foldMin=2,
         orderBiom=TRUE,
         baseExpr=NULL)
