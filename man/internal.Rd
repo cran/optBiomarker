@@ -22,7 +22,7 @@ plot3dFun(panel,...)
 dimSelect(x, val)
 yapprox(y, x, xout, method="linear", n=50,
           yleft, yright, rule = 1, f = 0, ties = mean)
-matapprox<-function(mat, rx, cx, nr=100,nc=20,rout, cout)
+matapprox(mat, rx, cx, nr=100,nc=20,rout, cout)
 
 classpredict.lda(object, newdata)
 classpredict.knn(object, newdata) 
