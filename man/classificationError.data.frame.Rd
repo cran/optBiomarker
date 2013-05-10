@@ -103,7 +103,7 @@ Mizanur Khondoker, Till Bachmann, Peter Ghazal \cr
 
 \examples{
 
-mydata<-simData(nTrain=30,nBiom=3)
+mydata<-simData(nTrain=30,nBiom=3)$data
 classificationError(formula=class~., data=mydata)
 
 }

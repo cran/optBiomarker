@@ -32,8 +32,13 @@
 
 ## sdW= sqrt(experimental or technical variation)
 ## sdB= sqrt(biological variation)
-## rho= common Pearson correlation coefficient between biomarkers 
+## rhoMax= Maximum Pearson's correlation coefficient between biomarkers
+## rhoMinx= Minimum Pearson's correlation coefficient between biomarkers
+##
 ## foldMin= Minimum value of fold changes
+## nBlock= number of blocks in the block diagonal (Hub-Toeplitz) correlation matrix
+## bSizes= a vector of block sizes (should sum to nBlock)
+## gamma= if NULL, assume independence. gamma>=0 specify a correlation structure. gamma=0 indicates a single block exchangeable correlation marix with constant correlation rho=0.5*(rhoMin+rhoMax). A value greater than zero (e.g., gamma=1) block diagonal (Hub-Toeplitz) correlation matrix.
 ## sigma= Standard deviation of the normal distribution (before truncation)
 ##        where fold changes are generated from  
 ## baseExpr = A vector of length nBiom to be used as \mu_g (log2 scale, <16) 
@@ -43,7 +48,8 @@
 
 
 simData<-function(nTrain=100, nGr1=floor(nTrain/2), nBiom=50,nRep=3,
-                  sdW=1.0, sdB=1.0,rho=0,sigma=0.1,diffExpr=TRUE, foldMin=2,orderBiom=TRUE,baseExpr=NULL)
+                  sdW=1.0, sdB=1.0 ,rhoMax=NULL, rhoMin=NULL, nBlock=NULL,bsMin=3, bSizes=NULL, gamma=NULL,
+                  sigma=0.1,diffExpr=TRUE, foldMin=2,orderBiom=TRUE,baseExpr=NULL)
 {
     checkInt<-c(nTrain,nGr1,nBiom, nRep)
     if(!identical(checkInt, floor(checkInt))) stop("non-integer(s) given where argument(s) should be integer valued") 
@@ -57,8 +63,12 @@ simData<-function(nTrain=100, nGr1=floor(nTrain/2), nBiom=50,nRep=3,
     nGr2<-nTrain-nGr1
 
     if (nGr2<1) stop("'nTrain' must be greater than 'nGr1'")
-    if (rho<0 || rho>0.95)stop("allowed values of 'rho' are between 0 and 0.95 inclusive")
-
+    if(!is.null(rhoMax) && (rhoMax<0 || rhoMax>0.95))stop("allowed values of 'rhoMax' are between 0 and 0.95 inclusive")
+    
+     if (!is.null(rhoMin) && (rhoMin<0 || rhoMin>0.95))stop("allowed values of 'rhoMin' are between 0 and 0.95 inclusive")
+     if (!is.null(rhoMin) && !is.null(rhoMax) && (rhoMin>rhoMax))stop("'rhoMin' should be less than or equal to 'rhoMax'")
+    if (!is.null(bSizes) && sum(bSizes)!=nBiom)stop("block sizes do not add up to the nBiom")
+    if (!is.null(gamma) && gamma<0) stop("'gamma' should be non-negative.")
 
     ## Simulate  nTrain by nBiom by nRep array of experimental errors
     ## --------------------------------------------------------------
@@ -79,12 +89,66 @@ simData<-function(nTrain=100, nGr1=floor(nTrain/2), nBiom=50,nRep=3,
     ## Introduce correlation structure
     ## -------------------------------
 
-    if (nBiom>1 && rho!=0) {
+    ## Block diagonal (Hub-Toeplitz) or Exchangeable correlation structure
+   
+ if (nBiom>1 && !is.null(gamma)) {
+    ## Define exchangeable correlation matrix
+    if (gamma==0) {
+        repeat{
+        if (is.null(rhoMax)) rhoMax<-runif(1,min=0.6,max=0.8)
+        if (is.null(rhoMin)) rhoMin<-runif(1,min=0.2,max=0.4)
+        if (rhoMin>rhoMax)stop("'rhoMin' should be less than or equal to 'rhoMax'")
+        Rho<-diag(rep(1,nBiom))
+        Rho[upper.tri(Rho)|lower.tri(Rho)]<-0.5*(rhoMax+rhoMin)
+        if(all(eigen(Rho,only.values=TRUE)[[1]]>0)) break
+    }
+    }
+    ## Block diagonal (Hub-Toeplitz) correlation structure
+    if (gamma>0){
+        ## Define block number and block sizes
+        if (nBiom<5)bMax<-1 else bMax<-floor(nBiom/bsMin)
+        if(is.null(nBlock)) nBlock<-sample(1:bMax,1)
+        if(is.null(bSizes)){
+            bs<-nBiom%/%nBlock
+            mod<-nBiom%%nBlock
+            bs1<-bs+mod
+            bSizes<-c(bs1,rep(bs,nBlock-1))
+        }
+        lRho<-vector("list", nBlock)
+        lRho
+        for (i in 1:length(bSizes)){
+            lRho[[i]]<-diag(rep(1, bSizes[i]))
+        }
 
-      ## Define the correlation matrix
+         fill<-function(x,rhoMax, rhoMin, gamma){
+           
+            k<-ncol(x)
+            y<-x[1,]
+            y[2:k]<-rhoMax-(((2:k)-2)/(k-2))^gamma*(rhoMax-rhoMin)
+            for (i in 1:(k-1)){
+                x[i,(i+1):k]<-y[2:(k+1-i)]
+            }
+            x[lower.tri(x)]<-t(x)[lower.tri(t(x))]
+           return(x)                	
+        }
+        
+        if (nullMax<-is.null(rhoMax)) rhoMax<-runif(1,min=0.6,max=0.8)
+        if (nullMin<-is.null(rhoMin)) rhoMin<-runif(1,min=0.2,max=0.4)
 
-      Rho<-diag(rep(1,nBiom))
-      Rho[upper.tri(Rho)|lower.tri(Rho)]<-rho
+        lRho<-lapply(lRho, fill, rhoMax, rhoMin,gamma)
+        if (nullMax || nullMin){
+            repeat{
+                posd<-lapply(lRho, function(x) eigen(x, only.values=TRUE)$values>0)
+                if (all(unlist(posd))) break
+                rhoMax<-runif(1,min=0.6,max=0.8)
+                rhoMin<-runif(1,min=0.2,max=0.4)
+                lRho<-lapply(lRho, fill, rhoMax, rhoMin,gamma) 
+            }
+            
+        }
+        
+        Rho<-as.matrix(Matrix::bdiag(lRho))
+    }
       
       ## Existing standard deviations in the data
       
@@ -94,6 +158,8 @@ simData<-function(nTrain=100, nGr1=floor(nTrain/2), nBiom=50,nRep=3,
       randErrScaled<-scale(randErr,center=FALSE,scale=TRUE)
    
       ## Covariance matrix with desired Rho
+
+
       
       covMat<-sdMat%*%Rho%*%sdMat
       cholRoot<-chol(covMat) ## property: t(cholRoot)%*%cholRoot==covMat
@@ -105,7 +171,7 @@ simData<-function(nTrain=100, nGr1=floor(nTrain/2), nBiom=50,nRep=3,
       ## Replace original data by the transformed data
 
       randErr<- randErrTrans
-    }
+}
 
     ## Give column names
     ## -----------------
@@ -154,10 +220,9 @@ simData<-function(nTrain=100, nGr1=floor(nTrain/2), nBiom=50,nRep=3,
 
     class<-factor(c(rep("H",nGr1),rep("D",nGr2)))
     data<-data.frame(class=class,avgData)
-    return(data)
+    return(list(data=data,corrMat=if(is.null(gamma)) NULL else Rho))
 }
 
 ################################################################################
 ## End of:                         simData.R
 ################################################################################
-

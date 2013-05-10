@@ -14,7 +14,8 @@ simData(nTrain=100,
         nGr1=floor(nTrain/2),
         nBiom=50,nRep=3,
         sdW=1.0,
-        sdB=1.0,rho=0,
+        sdB=1.0,
+        rhoMax=NULL, rhoMin=NULL, nBlock=NULL,bsMin=3, bSizes=NULL, gamma=NULL,
         sigma=0.1,diffExpr=TRUE,
         foldMin=2,
         orderBiom=TRUE,
@@ -32,10 +33,37 @@ simData(nTrain=100,
   \item{sdW}{Experimental (technical) variation (\eqn{\sigma_e}) of  data in
   log (base 2) scale.}
   \item{sdB}{Biological variation (\eqn{\sigma_b}) of  data in
-  log (base 2) scale.}
-   \item{rho}{Common Pearson correlation between biomarkers. To ensure
-  positive definiteness, allowed values of \code{rho} are restricted between 0 and 0.95 inclusive.}
-  \item{sigma}{Standard deviation of the normal distribution (before
+    log (base 2) scale.}
+  \item{rhoMax}{Maximum Pearson's correlation coefficient between
+  biomarkers. To ensure positive definiteness, allowed values are
+  restricted between 0 and 0.95 inclusive.  If \code{NULL}, set to
+  \code{runif(1,min=0.6,max=0.8)}.}
+
+ \item{rhoMin}{Minimum Pearson's correlation coefficient between
+  biomarkers. To ensure positive definiteness, allowed values are
+  restricted between 0 and 0.95 inclusive. If \code{NULL}, set to
+  \code{runif(1,min=0.2,max=0.4)}.}
+
+\item{nBlock}{Number of blocks in the block diagonal (Hub-Toeplitz)
+  correlation matrix.  If \code{NULL}, set to 1 for \code{nBiom<5} and
+randomly selected from \code{c(1:floor(nBiom/bsMin))} for  \code{nBiom>=5}.}
+
+\item{bsMin}{Minimum block size. \code{bsMin=3} by default.}
+\item{bSizes}{A vector of length \code{nBlock} representing the block sizes
+  (should sum to \code{nBlock}). If \code{NULL}, set to
+  \code{c(bs+mod,rep(bs,nBlock-1)}, where \code{bs} is the integer
+  part of \code{nBiom/nBlock} and \code{mod} is the remainder after
+  integer division.}
+
+\item{gamma}{Specifies a correlation structure. If \code{NULL}, assumes
+  independence.\code{gamma=0} indicates a single block exchangeable
+  correlation marix with constant correlation
+  \code{rho=0.5*(rhoMin+rhoMax)}. A value greater than zero indicates
+  block diagonal (Hub-Toeplitz) correlation matrix with decline rate
+  determined by the value of \code{gamma}. Decline rate is linear for
+  \code{gamma=1}.}
+  
+\item{sigma}{Standard deviation of the normal distribution (before
   truncation) where fold changes are generated from. See details.}
   \item{diffExpr}{Logical. Should systematic difference be introduced
   between the data of the two groups?}
@@ -90,7 +118,6 @@ Khondoker, M. R., Till T. Bachmann, T. T., Mewissen, M., Dickinson, P. \emph{et 
 Multi-factorial analysis of class prediction error: estimating optimal number of biomarkers for various classification rules.
 \emph{Journal of Bioinformatics and Computational Biology}, \bold{8}, 945-965.
 }
-
 
 \seealso{\code{\link{classificationError}}}
 \examples{
