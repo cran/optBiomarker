@@ -1,6 +1,6 @@
 exportPattern("^[[:alpha:]]+")
 
-import(MASS,randomForest, e1071,ipred, msm, rpanel,rgl)
+import(MASS,randomForest, e1071,ipred, msm, rpanel, rgl, stats)
 S3method(classificationError,default)
 S3method(classificationError,data.frame)
 

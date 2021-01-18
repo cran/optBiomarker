@@ -85,7 +85,7 @@ Breiman, L. (2001). \emph{Random Forests}, Machine Learning
 \bold{45}(1), 5--32.
 
 Chang, Chih-Chung and Lin, Chih-Jen: \emph{LIBSVM: a library for Support
-  Vector Machines}, \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm}. 
+  Vector Machines}, \url{https://www.csie.ntu.edu.tw/~cjlin/libsvm/}. 
 
 Ripley, B. D. (1996). \emph{Pattern Recognition and Neural
   Networks}.Cambridge: Cambridge University Press.
@@ -103,8 +103,10 @@ Mizanur Khondoker, Till Bachmann, Peter Ghazal \cr
 
 \examples{
 
+\dontrun{
 mydata<-simData(nTrain=30,nBiom=3)$data
 classificationError(formula=class~., data=mydata)
+}
 
 }
 

@@ -1,18 +1,18 @@
 Package: optBiomarker
 Type: Package
-Title: Estimation of optimal number of biomarkers for two-group
-        microarray based classifications at a given error tolerance
-        level for various classification rules
-Version: 1.0-27
-Date: 2013-05-10
-Depends: R (>= 2.10), rpanel, rgl
-Imports: MASS, randomForest, e1071,ipred, msm, Matrix
+Title: Estimation of Optimal Number of Biomarkers for Two-Group
+        Microarray Based Classifications at a Given Error Tolerance
+        Level for Various Classification Rules
+Version: 1.0-28
+Date: 2020-12-23
+Depends: R (>= 2.10), rpanel
+Imports: MASS, randomForest, e1071,ipred, msm, rgl, Matrix
 Author: Mizanur Khondoker <mizanur.khondoker@gmail.com>
 Maintainer: Mizanur Khondoker <mizanur.khondoker@gmail.com>
 Description: Estimates optimal number of biomarkers for two-group
-        classification based on microarray data
+        classification based on microarray data.
 License: GPL (>= 2)
-Packaged: 2013-07-10 23:42:19 UTC; root
+Packaged: 2021-01-18 20:13:49 UTC; mizan
 Repository: CRAN
-Date/Publication: 2013-07-11 07:37:56
+Date/Publication: 2021-01-18 23:50:02 UTC
 NeedsCompilation: no

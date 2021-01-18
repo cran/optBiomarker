@@ -1,5 +1,5 @@
-54fd4ac140b1d5a6a01968d0e9b01fde *DESCRIPTION
-caab221ccad097dc3ce029ba9b3cb75a *NAMESPACE
+83663edd526fe0b1641058f3bcd45c21 *DESCRIPTION
+2d8757ae30733d9cf087b3f326ac547d *NAMESPACE
 7f6562574561a4455d268c43c039bbc5 *R/classificationError.data.frame.R
 ca3c5b525557d139cde752ea3677f895 *R/internal.R
 1a4f88d553a33f1efeeaa81b248e3686 *R/optimiseBiomarker.R
@@ -7,10 +7,10 @@ ca3c5b525557d139cde752ea3677f895 *R/internal.R
 4065662b0b14ab217f2688d1b30ac6ed *data/errorDbase.RData
 46294c5e7c765a3fbf748f845b60f2e7 *data/realBiomarker.RData
 0e740f756e77398ac73ecc8bcb30ab71 *inst/doc/optBiomarker-screenshot.pdf
-a68bca74a2dde182189b0ea6dc231b22 *man/classificationError.data.frame.Rd
+f61c4fb042f38474fb2cc7b489cf1e91 *man/classificationError.data.frame.Rd
 f6c4b6d90d06ba10dfeab607eb73a7ac *man/errorDbase.Rd
 d9e979418412f8594999d90d430b93b5 *man/internal.Rd
-1ac2c889e850806a4678164b569bd847 *man/optBiomarker-package.Rd
-2e156b476d72a821765b51ca3e135043 *man/optimiseBiomarker.Rd
+1a0be946c372ce9727a7ed29e699376f *man/optBiomarker-package.Rd
+5877d28a5905ed0d5e533b214501009c *man/optimiseBiomarker.Rd
 0d9d6c2f1fb194466ef37ae60d859f77 *man/realBiomarker.Rd
 6ef49e29655e92a22d8260596912733a *man/simData.Rd
